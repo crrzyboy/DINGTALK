@@ -1,36 +1,32 @@
-name: Upload Python Package
+name: 自动执行代码
 
+# 触发条件：每天UTC时间0点（北京时间8点）执行，也可手动触发
 on:
   schedule:
-    # 每月最后一天的16:00执行
-    # 使用UTC时间，若需要北京时间需减去8小时（北京时间16:00 = UTC 08:00）
-    - cron: '0 8 L * *'
+    - cron: '0 0 * * *'  # 定时规则（UTC时间）
   workflow_dispatch:  # 允许手动触发
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    
+  run-script:
+    runs-on: ubuntu-latest  # 使用Ubuntu服务器运行
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ' 3.10.11'  # 使用你需要的Python版本
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build
-        
-    - name: Build package
-      run: python -m build
-      
-    - name: Publish to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
-        # 可选：仅在发布标签时执行（如果需要）
-        # skip_existing: true
+      # 步骤1：拉取仓库代码
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      # 步骤2：设置运行环境（以Python为例）
+      - name: 设置Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'  # 指定Python版本
+
+      # 步骤3：安装依赖（如果需要）
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          # 如果有依赖，添加：pip install -r requirements.txt
+
+      # 步骤4：执行代码文件
+      - name: 执行脚本
+        run: python script.py  # 运行你的代码文件
