@@ -29,4 +29,4 @@ jobs:
 
       # 步骤4：执行代码文件
       - name: 执行脚本
-        run: python script.py  # 运行你的代码文件
+        run: python dingding.py  # 运行你的代码文件
