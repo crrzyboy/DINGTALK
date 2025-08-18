@@ -1,0 +1,32 @@
+name: 自动执行代码
+
+# 触发条件：每月最后一天北京时间16点（UTC时间8点）执行，也可手动触发
+on:
+  schedule:
+    - cron: '0 8 L * *'  # L表示每月最后一天，UTC时间8点=北京时间16点
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest  # 使用Ubuntu服务器运行
+
+    steps:
+      # 步骤1：拉取仓库代码
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      # 步骤2：设置运行环境（以Python为例）
+      - name: 设置Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9.12'  # 指定Python版本
+
+      # 步骤3：安装依赖（如果需要）
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          # 如果有依赖，添加：pip install -r requirements.txt
+
+      # 步骤4：执行代码文件
+      - name: 执行脚本
+        run: python dingding.py  # 运行你的代码文件
